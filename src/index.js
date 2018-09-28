@@ -230,7 +230,7 @@ class Dropzone extends React.Component {
   }
 
   onClick(evt) {
-    const { onClick, disableClick } = this.props
+    const { onClick, disableClick, oneDriveAppID } = this.props
     if (!disableClick) {
       evt.stopPropagation()
 
@@ -238,6 +238,13 @@ class Dropzone extends React.Component {
         onClick.call(this, evt)
       }
 
+      if (oneDriveAppID != null) {
+        const {oneDriveRedirectUrl, oneDriveUpload} = this.props
+        if (typeof oneDriveUpload === 'function') {
+          oneDriveUpload(oneDriveAppID,oneDriveRedirectUrl)
+          return;
+        }
+      }
       // in IE11/Edge the file-browser dialog is blocking, ensure this is behind setTimeout
       // this is so react can handle state changes in the onClick prop above above
       // see: https://github.com/react-dropzone/react-dropzone/issues/450
@@ -622,7 +629,22 @@ Dropzone.propTypes = {
   /**
    * Provide a callback on clicking the cancel button of the file dialog
    */
-  onFileDialogCancel: PropTypes.func
+  onFileDialogCancel: PropTypes.func,
+  
+  /**
+   * Individual App ID to open that person's one drive
+   */
+  oneDriveAppID: PropTypes.string,
+
+  /**
+   * Redirect url that call onedrive.html
+   */
+  oneDriveRedirectUrl: PropTypes.string,
+
+  /**
+   * Provide a callback on one drive upload function
+   */
+  oneDriveUpload: PropTypes.func
 }
 
 Dropzone.defaultProps = {
