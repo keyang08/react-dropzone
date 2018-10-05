@@ -31,6 +31,8 @@ class Dropzone extends React.Component {
     this.setRef = this.setRef.bind(this)
     this.setRefs = this.setRefs.bind(this)
 
+    this.localFileInputClick = this.localFileInputClick.bind(this)
+
     this.isFileDialogActive = false
 
     this.state = {
@@ -230,29 +232,24 @@ class Dropzone extends React.Component {
   }
 
   onClick(evt) {
-    const { onClick, disableClick, oneDriveAppID } = this.props
+    const { onClick, disableClick, oneDriveAppID, oneDriveRedirectUrl, oneDriveUpload } = this.props
     if (!disableClick) {
       evt.stopPropagation()
 
       if (onClick) {
-        onClick.call(this, evt)
+        onClick(oneDriveAppID, oneDriveRedirectUrl, this.localFileInputClick, oneDriveUpload)
       }
+    }
+  }
 
-      if (oneDriveAppID != null) {
-        const {oneDriveRedirectUrl, oneDriveUpload} = this.props
-        if (typeof oneDriveUpload === 'function') {
-          oneDriveUpload(oneDriveAppID,oneDriveRedirectUrl)
-          return;
-        }
-      }
-      // in IE11/Edge the file-browser dialog is blocking, ensure this is behind setTimeout
-      // this is so react can handle state changes in the onClick prop above above
-      // see: https://github.com/react-dropzone/react-dropzone/issues/450
-      if (isIeOrEdge()) {
-        setTimeout(this.open.bind(this), 0)
-      } else {
-        this.open()
-      }
+  localFileInputClick(){
+    // in IE11/Edge the file-browser dialog is blocking, ensure this is behind setTimeout
+    // this is so react can handle state changes in the onClick prop above above
+    // see: https://github.com/react-dropzone/react-dropzone/issues/450
+    if (isIeOrEdge()) {
+      setTimeout(this.open.bind(this), 0)
+    } else {
+      this.open()
     }
   }
 
