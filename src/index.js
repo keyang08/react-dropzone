@@ -429,6 +429,9 @@ class Dropzone extends React.Component {
       maxSize,
       minSize,
       getDataTransferItems,
+      oneDriveAppID,
+      oneDriveRedirectUrl,
+      oneDriveUpload,
       ...divProps
     } = props
     /* eslint-enable no-unused-vars */
